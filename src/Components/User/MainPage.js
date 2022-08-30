@@ -1,8 +1,6 @@
 import React from "react";
 import CartBox from "../CartBox";
 import NavBar from "../NavBar";
-import { db } from "../../firebase";
-import { addDoc,collection,query,deleteDoc,orderBy,onSnapshot, doc ,updateDoc} from "firebase/firestore";
 import { getAllProducts } from "../../clint";
 
 
@@ -16,9 +14,9 @@ class MainPage extends React.Component {
     }    
     
     console.log(this.state.products);
-    this.d = collection(db,'products');
+    // this.d = collection(db,'products');
     // ,where("price","==",323)
-    this.d1 = query(this.d,orderBy("title",'asc'));
+    // this.d1 = query(this.d,orderBy("title",'asc'));
     // this.d1 = query(this.d,orderBy("price"),where("price",">=",10000),orderBy("title"));
   }
 
@@ -36,15 +34,20 @@ class MainPage extends React.Component {
     //     loading : false
     //   })
     // })
-    getAllProducts()
-    .then(res => res.json()
-    .then(products => { 
-      console.log("Hiiii",products);
-        this.setState({
-          products,
-          loading : false
-        });
-    }));
+    // getAllProducts
+    // .then(res => res.json()
+    // .then(products => { 
+    //   console.log("Hiiii",products);
+    //     this.setState({
+    //       products,
+    //       loading : false
+    //     });
+    // }));
+    this.setState({
+      products: getAllProducts,
+      loading: false
+    })
+
     // onSnapshot(this.d1,(res) =>{
     //     const products = res.docs.map((doc) => {
     //         const data = doc.data();
@@ -62,19 +65,19 @@ class MainPage extends React.Component {
   increaseQty = (product) =>{
       const {products} = this.state;
       const index = products.indexOf(product);
-      // products[index].qty += 1;
-      // this.setState({
-      //   products : products
-      // });
-      const docref = doc(this.d,products[index].id);
-      updateDoc(docref,{
-        qty : products[index].qty+1
-      }).then(()=>{
-        console.log("Updated Successfully...");
-      }).catch((err) => {
-        console.log("Error: ",err);
-      })
-      console.log("products: ", product);
+      products[index].qty += 1;
+      this.setState({
+        products : products
+      });
+      // const docref = doc(this.d,products[index].id);
+      // updateDoc(docref,{
+      //   qty : products[index].qty+1
+      // }).then(()=>{
+      //   console.log("Updated Successfully...");
+      // }).catch((err) => {
+      //   console.log("Error: ",err);
+      // })
+      // console.log("products: ", product);
   }
 
   decreaseQty = (product) => {
@@ -84,38 +87,38 @@ class MainPage extends React.Component {
         return
       }
 
-      // products[index].qty -= 1;
-      // this.setState({
-      //   products : products
-      // });
+      products[index].qty -= 1;
+      this.setState({
+        products : products
+      });
       
-      const docref = doc(this.d,products[index].id);
-      updateDoc(docref,{
-        qty : products[index].qty-1
-      }).then(()=>{
-        console.log("Updated Successfully...");
-      }).catch((err) => {
-        console.log("Error: ",err);
-      })
-      console.log("products: ", product);
+      // const docref = doc(this.d,products[index].id);
+      // updateDoc(docref,{
+      //   qty : products[index].qty-1
+      // }).then(()=>{
+      //   console.log("Updated Successfully...");
+      // }).catch((err) => {
+      //   console.log("Error: ",err);
+      // })
+      // console.log("products: ", product);
   }
 
   deleteProduct = (id) => {
 
-    // const {products} = this.state;
-    // const items = products.filter((item) => item.id !== id);
+    const {products} = this.state;
+    const items = products.filter((item) => item.id !== id);
 
-    // this.setState({
-    //   products : items
-    // });import { doc, deleteDoc } from "firebase/firestore";
+    this.setState({
+      products : items
+    });
 
     // await deleteDoc(doc(db, "cities", "DC"));
-    deleteDoc(doc(this.d,id))
-    .then(()=>{
-      console.log("Deleted Successfully...");
-    }).catch((err) => {
-      console.log("Error: ",err);
-    })
+    // deleteDoc(doc(this.d,id))
+    // .then(()=>{
+    //   console.log("Deleted Successfully...");
+    // }).catch((err) => {
+    //   console.log("Error: ",err);
+    // })
 
     
 
@@ -154,13 +157,13 @@ class MainPage extends React.Component {
       qty : 2,
       title : 'Smart Watch'
     }
-    addDoc(this.d,data)
-    .then((docref) =>{
-      console.log("Product has been added",docref);
-    })
-    .catch((err) => {
-      console.log("Error: ",err);
-    })  
+    // addDoc(this.d,data)
+    // .then((docref) =>{
+    //   console.log("Product has been added",docref);
+    // })
+    // .catch((err) => {
+    //   console.log("Error: ",err);
+    // })  
   }
 
   render () {
